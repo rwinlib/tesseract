@@ -87,7 +87,7 @@ const ERRCODE ASSERT_FAILED = "Assert failed";
                         __FILE__, __LINE__);                            \
   }
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define ASSERT_HOST_MSG(x, msg, ...) if (!(x))                            \
   {                                                                     \
     tprintf(msg);                                                       \

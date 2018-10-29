@@ -17,10 +17,8 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#ifndef TESSERACT_CCUTIL_PLATFORM_H__
-#define TESSERACT_CCUTIL_PLATFORM_H__
-
-#include <string.h>
+#ifndef TESSERACT_CCUTIL_PLATFORM_H_
+#define TESSERACT_CCUTIL_PLATFORM_H_
 
 #define DLLSYM
 #ifdef _WIN32
@@ -34,17 +32,12 @@
 #define ultoa _ultoa
 #endif  /* __GNUC__ */
 #define SIGNED
-#if defined(_MSC_VER)
-#if (_MSC_VER < 1900)
-#define snprintf _snprintf
-#endif
-#if (_MSC_VER <= 1400)
-#define vsnprintf _vsnprintf
-#endif /* (_MSC_VER <= 1400) */
-#endif /* defined(_MSC_VER) */
 #else
-#define __UNIX__
+#ifdef __cplusplus
+#include <climits>
+#else /* C compiler*/
 #include <limits.h>
+#endif /* __cplusplus */
 #ifndef PATH_MAX
 #define MAX_PATH 4096
 #else
@@ -83,12 +76,4 @@
     #endif
 #endif
 
-#if defined(_WIN32) || defined(__CYGWIN__)
-    #define _TESS_FILE_BASENAME_                                            \
-      (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-#else   // Unices
-    #define _TESS_FILE_BASENAME_                                            \
-      (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#endif
-
-#endif  // TESSERACT_CCUTIL_PLATFORM_H__
+#endif  // TESSERACT_CCUTIL_PLATFORM_H_

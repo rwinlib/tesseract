@@ -1,14 +1,8 @@
 Tesseract OCR stack for Windows:
 
- - Tesseract 4.0.0 --without-openmp
- - Leptonica 1.76
+ - Tesseract 4.1.0 --without-openmp
+ - Leptonica 1.78
 
-Note that OpenMP has been disabled because it leads to 
-massive performance regression. Hopefully this will be
-fixed upstream.
- 
-Everything in /lib was built RTOOLS4: GCC 8.2.0. 
-For the 4.9.3 I used the attached PKGBUILD (uncomment the 
-lines that set CC, CXX, etc)
+Tesseract was built with [rtools-backports](https://github.com/r-windows/rtools-backports/blob/master/mingw-w64-tesseract-ocr/PKGBUILD), the other libs with rtools-pakages.
 
-
+Note that OpenMP is disabled because it has poor performance.

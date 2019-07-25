@@ -97,21 +97,39 @@ typedef uintptr_t l_uintptr_t;
  *  non-functioning stubs to be linked.
  */
 #if !defined(HAVE_CONFIG_H) && !defined(ANDROID_BUILD) && !defined(OS_IOS)
-#define  HAVE_LIBJPEG       1
-#define  HAVE_LIBTIFF       1
-#define  HAVE_LIBPNG        1
-#define  HAVE_LIBZ          1
-#define  HAVE_LIBGIF        0
-#define  HAVE_LIBUNGIF      0
-#define  HAVE_LIBWEBP       0
-#define  HAVE_LIBJP2K       0
 
-/*-------------------------------------------------------------------------*
- * Leptonica supports OpenJPEG 2.0+.  If you have a version of openjpeg    *
- * (HAVE_LIBJP2K == 1) that is >= 2.0, set the path to the openjpeg.h      *
- * header in angle brackets here.                                          *
- *-------------------------------------------------------------------------*/
-#define  LIBJP2K_HEADER   <openjpeg-2.3/openjpeg.h>
+  #if !defined(HAVE_LIBJPEG)
+  #define  HAVE_LIBJPEG       1
+  #endif
+  #if !defined(HAVE_LIBTIFF)
+  #define  HAVE_LIBTIFF       1
+  #endif
+  #if !defined(HAVE_LIBPNG)
+  #define  HAVE_LIBPNG        1
+  #endif
+  #if !defined(HAVE_LIBZ)
+  #define  HAVE_LIBZ          1
+  #endif
+  #if !defined(HAVE_LIBGIF)
+  #define  HAVE_LIBGIF        0
+  #endif
+  #if !defined(HAVE_LIBUNGIF)
+  #define  HAVE_LIBUNGIF      0
+  #endif
+  #if !defined(HAVE_LIBWEBP)
+  #define  HAVE_LIBWEBP       0
+  #endif
+  #if !defined(HAVE_LIBJP2K)
+  #define  HAVE_LIBJP2K       0
+  #endif
+
+  /*-----------------------------------------------------------------------*
+   * Leptonica supports OpenJPEG 2.0+.  If you have a version of openjpeg  *
+   * (HAVE_LIBJP2K == 1) that is >= 2.0, set the path to the openjpeg.h    *
+   * header in angle brackets here.                                        *
+   *-----------------------------------------------------------------------*/
+  #define  LIBJP2K_HEADER   <openjpeg-2.3/openjpeg.h>
+
 #endif  /* ! HAVE_CONFIG_H etc. */
 
 /*--------------------------------------------------------------------*
@@ -171,6 +189,7 @@ typedef uintptr_t l_uintptr_t;
 /*--------------------------------------------------------------------*
  *                          Built-in types                            *
  *--------------------------------------------------------------------*/
+typedef int                     l_ok;    /*!< return type 0 if OK, 1 on error */
 typedef signed char             l_int8;     /*!< signed 8-bit value */
 typedef unsigned char           l_uint8;    /*!< unsigned 8-bit value */
 typedef short                   l_int16;    /*!< signed 16-bit value */
@@ -207,16 +226,16 @@ LEPT_DLL extern l_int32  LeptDebugOK;  /* default is 0 */
  *------------------------------------------------------------------------*/
 #ifndef L_MIN
 /*! Minimum of %x and %y */
-#define L_MIN(x,y)   (((x) < (y)) ? (x) : (y))
+#define L_MIN(x, y)   (((x) < (y)) ? (x) : (y))
 #endif
 
 #ifndef L_MAX
 /*! Maximum of %x and %y */
-#define L_MAX(x,y)   (((x) > (y)) ? (x) : (y))
+#define L_MAX(x, y)   (((x) > (y)) ? (x) : (y))
 #endif
 
 #ifndef L_ABS
-/*! Absoulute value of %x */
+/*! Absolute value of %x */
 #define L_ABS(x)     (((x) < 0) ? (-1 * (x)) : (x))
 #endif
 
@@ -263,7 +282,7 @@ LEPT_DLL extern l_int32  LeptDebugOK;  /* default is 0 */
 /*------------------------------------------------------------------------*
  *                    Simple search state variables                       *
  *------------------------------------------------------------------------*/
-/*! Simple search state variables */
+/*! Search State */
 enum {
     L_NOT_FOUND = 0,
     L_FOUND = 1
@@ -273,7 +292,7 @@ enum {
 /*------------------------------------------------------------------------*
  *                     Path separator conversion                          *
  *------------------------------------------------------------------------*/
-/*! Path separator conversion */
+/*! Path Separators */
 enum {
     UNIX_PATH_SEPCHAR = 0,
     WIN_PATH_SEPCHAR = 1
@@ -346,7 +365,8 @@ typedef struct L_WallTimer  L_WALLTIMER;
  *  "Print messages that have an equal or greater severity than this."    *
  *------------------------------------------------------------------------*/
 
-/*! Control printing of error, warning and info messages */
+    /*! Control printing of error, warning and info messages */
+/*! Message Control */
 enum {
     L_SEVERITY_EXTERNAL = 0,   /* Get the severity from the environment   */
     L_SEVERITY_ALL      = 1,   /* Lowest severity: print all messages     */
@@ -466,51 +486,51 @@ LEPT_DLL extern l_int32  LeptMsgSeverity;
 #ifdef  NO_CONSOLE_IO
 
   #define PROCNAME(name)
-  #define ERROR_INT(a,b,c)            ((l_int32)(c))
-  #define ERROR_FLOAT(a,b,c)          ((l_float32)(c))
-  #define ERROR_PTR(a,b,c)            ((void *)(c))
-  #define L_ERROR(a,...)
-  #define L_WARNING(a,...)
-  #define L_INFO(a,...)
+  #define ERROR_INT(a, b, c)            ((l_int32)(c))
+  #define ERROR_FLOAT(a, b, c)          ((l_float32)(c))
+  #define ERROR_PTR(a, b, c)            ((void *)(c))
+  #define L_ERROR(a, ...)
+  #define L_WARNING(a, ...)
+  #define L_INFO(a, ...)
 
 #else
 
   #define PROCNAME(name)              static const char procName[] = name
-  #define IF_SEV(l,t,f) \
+  #define IF_SEV(l, t, f) \
       ((l) >= MINIMUM_SEVERITY && (l) >= LeptMsgSeverity ? (t) : (f))
 
-  #define ERROR_INT(a,b,c) \
-      IF_SEV(L_SEVERITY_ERROR, returnErrorInt((a),(b),(c)), (l_int32)(c))
-  #define ERROR_FLOAT(a,b,c) \
-      IF_SEV(L_SEVERITY_ERROR, returnErrorFloat((a),(b),(c)), (l_float32)(c))
-  #define ERROR_PTR(a,b,c) \
-      IF_SEV(L_SEVERITY_ERROR, returnErrorPtr((a),(b),(c)), (void *)(c))
+  #define ERROR_INT(a, b, c) \
+      IF_SEV(L_SEVERITY_ERROR, returnErrorInt((a), (b), (c)), (l_int32)(c))
+  #define ERROR_FLOAT(a, b, c) \
+      IF_SEV(L_SEVERITY_ERROR, returnErrorFloat((a), (b), (c)), (l_float32)(c))
+  #define ERROR_PTR(a, b, c) \
+      IF_SEV(L_SEVERITY_ERROR, returnErrorPtr((a), (b), (c)), (void *)(c))
 
-  #define L_ERROR(a,...) \
+  #define L_ERROR(a, ...) \
       IF_SEV(L_SEVERITY_ERROR, \
              (void)fprintf(stderr, "Error in %s: " a, __VA_ARGS__), \
              (void)0)
-  #define L_WARNING(a,...) \
+  #define L_WARNING(a, ...) \
       IF_SEV(L_SEVERITY_WARNING, \
              (void)fprintf(stderr, "Warning in %s: " a, __VA_ARGS__), \
              (void)0)
-  #define L_INFO(a,...) \
+  #define L_INFO(a, ...) \
       IF_SEV(L_SEVERITY_INFO, \
              (void)fprintf(stderr, "Info in %s: " a, __VA_ARGS__), \
              (void)0)
 
 #if 0  /* Alternative method for controlling L_* message output */
-  #define L_ERROR(a,...) \
+  #define L_ERROR(a, ...) \
     { if (L_SEVERITY_ERROR >= MINIMUM_SEVERITY && \
           L_SEVERITY_ERROR >= LeptMsgSeverity) \
           fprintf(stderr, "Error in %s: " a, __VA_ARGS__) \
     }
-  #define L_WARNING(a,...) \
+  #define L_WARNING(a, ...) \
     { if (L_SEVERITY_WARNING >= MINIMUM_SEVERITY && \
           L_SEVERITY_WARNING >= LeptMsgSeverity) \
           fprintf(stderr, "Warning in %s: " a, __VA_ARGS__) \
     }
-  #define L_INFO(a,...) \
+  #define L_INFO(a, ...) \
     { if (L_SEVERITY_INFO >= MINIMUM_SEVERITY && \
           L_SEVERITY_INFO >= LeptMsgSeverity) \
              fprintf(stderr, "Info in %s: " a, __VA_ARGS__) \

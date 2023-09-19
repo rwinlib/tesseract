@@ -39,7 +39,7 @@ cp -Rf ${OUTPUT}/mingw64/include/{tesseract,leptonica} include/
 cp -Rf ${OUTPUT}/mingw64/share/tessdata share/
 cp -Rf ${OUTPUT}/mingw64/lib lib-8.3.0/x64
 cp -Rf ${OUTPUT}/mingw32/lib lib-8.3.0/i386
-cp -Rf ${OUTPUT}/ucrt64/lib lib/x64
+cp -Rf ${OUTPUT}/ucrt64/lib/*.a lib/
 ls -ltrRh .
 
 # Cleanup
